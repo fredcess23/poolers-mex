@@ -2,23 +2,23 @@
 <div class="panel panel-default">  
 
   <div class="panel-body">
-    <form accept-charset="UTF-8" role="register">
+    <form name="registerForm" role="register" ng-submit="regCtrl.addUser()">
         <fieldset>
 
           <div class="form-group">
-            <input class="form-control" placeholder="Nombre" name="name" type="text">
+            <input class="form-control" placeholder="Nombre" name="name" type="text" required>
           </div>
           <div class="form-group">
-            <input class="form-control" placeholder="Apellido" name="lastName" type="password" value="">
+            <input class="form-control" placeholder="Apellido" name="lastName" type="password" value="" required>
           </div>
           <div class="form-group">
-            <input class="form-control" placeholder="Correo" name="email" type="text">
+            <input class="form-control" placeholder="Correo" name="email" type="email" required>
           </div>
           <div class="form-group">
-            <input class="form-control" placeholder="Usuario" name="user" type="text">
+            <input class="form-control" placeholder="Usuario" name="user" type="text" required>
           </div>
           <div class="form-group">
-            <input class="form-control" placeholder="Contraseña" name="password" type="password" value="">
+            <input class="form-control" placeholder="Contraseña" name="password" type="password" value="" required>
           </div>
 
           <div>
