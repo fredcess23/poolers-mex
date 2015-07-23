@@ -1,14 +1,15 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
+//var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+//var cookieParser = require('cookie-parser');
+//var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var register = require('./routes/register');
 var profile = require('./routes/profile');
+var carpool = require('./routes/carpool');
 
 
 var app = express();
@@ -20,17 +21,85 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: false }));
+//app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 //app.use(express.static(path.join(__dirname, 'public/views')));
+
+
+//Conection to Mongoose
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/poolersmx', function(error){
+ if(error){
+    throw error; 
+ }else{
+    console.log('Conected to MongoDB');
+ }
+});
+
+//Documents
+var UserSchema = mongoose.Schema({
+  name: String,
+  lastname: String,
+  email: String,
+  user: String,
+  password: String
+});
+
+var User = mongoose.model('user', UserSchema);
+
+app.post('/save', function(req, res){
+if(req.query._id == null){
+  //Insert
+  var users = new User({
+     name: req.query.name,
+     lastname: req.query.lastname,
+     email: req.query.email,
+     user: req.query.user,
+     password: req.query.password
+  });
+  users.save(function(error, document){
+    if(error){
+      res.send('Error !');
+    }else{
+      res.send(document);
+    }
+    });
+
+  }else{
+    //Update
+  User.findById(req.query._id, function(error, document){
+      if(error){
+        res.send('Error.');
+      }else{
+        var users = document;
+        users.name = req.query.name,
+        users.lastname = req.query.lastname,
+        users.email = req.query.email,
+        users.user = req.query.user,
+        users.password = req.query.password
+        users.save(function(error, document){
+        if(error){
+            res.send('Error !');
+        }else{ 
+            res.send(document);
+        }
+      });
+    }
+  });
+}
+});
+
+
 
 
 app.use('/', routes);
 app.use('/users', users);
 app.use('/register', register);
 app.use('/profile', profile);
+app.use('/carpool', carpool);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -62,6 +131,9 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+
+
 
 
 module.exports = app;

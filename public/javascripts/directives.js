@@ -31,10 +31,122 @@
       return {
         restrict: 'E',
         templateUrl: 'partials/poolersmx-register.html',
-        controller: function(){
-          // logic here
+        controller: function($scope,$http){
+      
+          $scope._id = null;
+          $scope.name = '';
+          $scope.lastName = ''
+          $scope.email = '';
+          $scope.user = '';
+          $scope.password = '';
+          $scope.clientes = [];
+
+          $scope.loadUsers = function(){
+            $http({
+               method: 'GET', 
+               url: '/load'
+            }).
+            success(function(data) {
+               if(typeof(data) == 'object'){
+                  $scope.clientes = data;
+               }else{
+                  alert('Error trying to get the Users');
+               }
+            }).
+            error(function() {
+               alert('Error trying to get the Users');
+            });
+          };
+
+
+          $scope.saveUser = function() {
+            $http({
+               method: 'POST',
+               url: '/save',
+               params: {
+                  name: $scope.name,
+                  lastName: $scope.lastName,
+                  email:$scope.email,
+                  user: $scope.user,
+                  password: $scope.password,
+                  _id: $scope._id
+               }
+            }).
+            success(function(data) {
+               if(typeof(data) == 'object'){
+                  $scope.cleanData();
+                  //$scope.cargarClientes();
+               }else{
+                  alert('Error trying to save the User.');
+               }
+            }).
+            error(function() {
+               alert('Error trying to save the User.');
+            });
+          };
+
+
+          $scope.getUser = function(indice) {
+            $http({
+               method: 'GET',
+               url: '/show',
+               params: {
+                  _id: indice
+               }
+            }).
+            success(function(data) {
+               if(typeof(data) == 'object'){
+                  $scope._id = data._id;
+                  $scope.name = data.name;
+                  $scope.lastName = data.lastName;
+                  $scope.email = data.email,
+                  $scope.password = data.password;
+                  $scope.user = data.user;
+                  $scope.password = data.password;
+               }else{
+                  alert('Error trying to get the User.');
+               } 
+            }).
+            error(function() {
+               alert('Error trying to get the User.');
+            });
+          };
+
+
+          $scope.eliminarCliente = function(indice) {
+            $http({
+               method: 'POST',
+               url: '/eliminar',
+               params: {
+                  _id: indice
+               }
+            }).
+            success(function(data) {
+               if(data == 'Ok'){
+                  $scope.limpiarDatos();
+                  $scope.cargarClientes();
+               }else{
+                  alert('Error trying to delete the User.');
+               } 
+            }).
+            error(function() {
+               alert('Error trying to delete the User.');
+            });
+          };
+
+
+           $scope.cleanData = function() {
+              $scope._id = null;
+              $scope.name = '';
+              $scope.lastName = '';
+              $scope.email = '';
+              $scope.user = '';
+              $scope.password = '';
+           };
+      
+
         },
-        controllerAs: 'regCtrl'
+        controllerAs: 'userCtrl'
 
       };
     })

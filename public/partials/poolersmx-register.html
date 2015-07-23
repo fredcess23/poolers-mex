@@ -2,27 +2,27 @@
 <div class="panel panel-default">  
 
   <div class="panel-body">
-    <form name="registerForm" role="register" ng-submit="regCtrl.addUser()">
+    <form name="registerForm" role="register">
         <fieldset>
 
           <div class="form-group">
-            <input class="form-control" placeholder="Nombre" name="name" type="text" required>
+            <input class="form-control" placeholder="Nombre" type="text" ng-model="name" required>
           </div>
           <div class="form-group">
-            <input class="form-control" placeholder="Apellido" name="lastName" type="password" value="" required>
+            <input class="form-control" placeholder="Apellido" type="text" ng-model="lastName" required>
           </div>
           <div class="form-group">
-            <input class="form-control" placeholder="Correo" name="email" type="email" required>
+            <input class="form-control" placeholder="Correo" type="email" ng-model="email" required>
           </div>
           <div class="form-group">
-            <input class="form-control" placeholder="Usuario" name="user" type="text" required>
+            <input class="form-control" placeholder="Usuario" type="text" ng-model="user" required>
           </div>
           <div class="form-group">
-            <input class="form-control" placeholder="Contraseña" name="password" type="password" value="" required>
+            <input class="form-control" placeholder="Contraseña" type="password" ng-model="password" required>
           </div>
 
           <div>
-              <button class="btn btn-success">Crear cuenta</button>
+              <button class="btn btn-success" ng-click="saveUser()" >Crear cuenta</button>
           </div>
 
       </fieldset>
