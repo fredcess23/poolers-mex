@@ -49,6 +49,27 @@ var UserSchema = mongoose.Schema({
 
 var User = mongoose.model('user', UserSchema);
 
+//login method
+
+app.post('/login', function(req, res){
+
+
+	User.findOne({'user':req.query.userid, 'password':req.query.psw }, 'email user', function (err, doc) {
+
+	    if (err) 
+	        //return handleError(err);
+	        res.send('Error.');
+	    else{
+	          //console.log('%s %s', doc.users.email, doc.users.user) 
+	          res.send(doc);
+	    }
+	})
+
+
+});
+
+//register method
+
 app.post('/save', function(req, res){
 if(req.query._id == null){
   //Insert

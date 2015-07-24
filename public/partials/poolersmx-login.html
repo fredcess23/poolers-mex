@@ -7,18 +7,18 @@
               <form name ="loginForm" role="login" >
                   <fieldset>
                     <div class="form-group">
-                      <input class="form-control" placeholder="Usuario" name="email" type="text" required>
+                      <input class="form-control" placeholder="Usuario" ng-model="userid" type="text" required>
                   </div>
                   <div class="form-group">
-                    <input class="form-control" placeholder="Contraseña" name="password" type="password" value="" required>
+                    <input class="form-control" placeholder="Contraseña" type="password" ng-model="psw" value="" required>
                   </div>
                   
-                  <input class="btn btn-lg btn-success btn-block" type="submit" value="Inicia Sesion">
+                  <input class="btn btn-lg btn-success btn-block" type="submit" ng-click="login()" value="Inicia Sesion">
 
                   <div class="or-box row-block">
                       <div class="row">
                           <div class="col-md-6 col-md-offset-3">
-                              <a href="#/register" class="btn btn-sm btn-primary btn-block">Crear Cuenta</a>
+                              <a class="btn btn-sm btn-primary btn-block">Recuperar password</a>
                           </div>
 
                       </div>

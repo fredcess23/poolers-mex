@@ -20,8 +20,38 @@
       return {
         restrict: 'E',
         templateUrl: 'partials/poolersmx-login.html',
-        controller: function(){
-          // logic here
+        controller: function($scope,$http){
+          
+          $scope.userid = '';
+          $scope.psw = '';
+
+
+          $scope.login = function() {
+            $http({
+               method: 'POST',
+               url: '/login',
+               params: {
+                  userid: $scope.userid,
+                  psw: $scope.psw    
+               }
+            }).
+
+            success(function(data) {
+               if(typeof(data) == 'object'){
+
+                 alert('Success');
+
+               }else{
+                  alert('Usuario o password incorrecto');
+               } 
+            }).
+
+            error(function() {
+               alert('Error in /login');
+            });
+          };
+
+
         },
         controllerAs: 'logCtrl'
       };
@@ -85,32 +115,6 @@
             });
           };
 
-
-          $scope.getUser = function(indice) {
-            $http({
-               method: 'GET',
-               url: '/show',
-               params: {
-                  _id: indice
-               }
-            }).
-            success(function(data) {
-               if(typeof(data) == 'object'){
-                  $scope._id = data._id;
-                  $scope.name = data.name;
-                  $scope.lastName = data.lastName;
-                  $scope.email = data.email,
-                  $scope.password = data.password;
-                  $scope.user = data.user;
-                  $scope.password = data.password;
-               }else{
-                  alert('Error trying to get the User.');
-               } 
-            }).
-            error(function() {
-               alert('Error trying to get the User.');
-            });
-          };
 
 
           $scope.eliminarCliente = function(indice) {
