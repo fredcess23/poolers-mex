@@ -3,7 +3,8 @@
   var app = angular.module('poolersmx', [
   	'ngRoute',
     'poolersmx.directives',
-    'poolersmx.controllers'
+    'poolersmx.controllers',
+    'poolersmx.services'
   ]);
 
 

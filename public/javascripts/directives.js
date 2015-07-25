@@ -61,7 +61,7 @@
       return {
         restrict: 'E',
         templateUrl: 'partials/poolersmx-register.html',
-        controller: function($scope,$http){
+        controller: function($scope,$http,poolersmxService){
       
           $scope._id = null;
           $scope.name = '';
@@ -90,29 +90,25 @@
 
 
           $scope.saveUser = function() {
-            $http({
-               method: 'POST',
-               url: '/save',
-               params: {
-                  name: $scope.name,
-                  lastName: $scope.lastName,
-                  email:$scope.email,
-                  user: $scope.user,
-                  password: $scope.password,
-                  _id: $scope._id
-               }
-            }).
-            success(function(data) {
-               if(typeof(data) == 'object'){
+
+            var userdata = {
+              _id: $scope._id ,
+              name: $scope.name,
+              lastName: $scope.lastName,
+              email: $scope.email,
+              user: $scope.user,
+              password: $scope.password
+            };
+
+            poolersmxService.serviceSaveUser(userdata).then(function (data) {
+              if(typeof(data) == 'object'){
                   $scope.cleanData();
                   //$scope.cargarClientes();
                }else{
-                  alert('Error trying to save the User.');
+                  alert('Error trying to save the User (directive).');
                }
-            }).
-            error(function() {
-               alert('Error trying to save the User.');
             });
+
           };
 
 
