@@ -40,79 +40,86 @@ mongoose.connect('mongodb://localhost:27017/poolersmx', function(error){
 
 //Documents
 var UserSchema = mongoose.Schema({
-  name: String,
-  lastname: String,
-  email: String,
-  user: String,
-  password: String
+	name: String,
+	lastname: String,
+	email: String,
+	user: String,
+	password: String
 });
 
-var User = mongoose.model('user', UserSchema);
+var userSchema = mongoose.model('user', UserSchema);
 
-//login method
-
+/**
+ * Get user from the DB based on user and and password attributes
+ * @param {Request} req 
+ * @param {Response} res
+ * @return {object} document
+ */
 app.post('/login', function(req, res){
-
-
-	User.findOne({'user':req.query.userid, 'password':req.query.psw }, 'email user', function (err, doc) {
-
+	
+	userSchema.findOne({'user':req.query.userid, 'password':req.query.psw }, 'email user', function (err, document) {
 	    if (err) 
 	        //return handleError(err);
 	        res.send('Error.');
 	    else{
 	          //console.log('%s %s', doc.users.email, doc.users.user) 
-	          res.send(doc);
+	          res.send(document);
 	    }
 	})
-
-
 });
 
-//register method
 
+/**
+ * Save or update user in the database
+ * @param {Request} req 
+ * @param {Response} res
+ * @return {object} document
+ */
 app.post('/save', function(req, res){
-if(req.query._id == null){
-  //Insert
-  var users = new User({
-     name: req.query.name,
-     lastname: req.query.lastname,
-     email: req.query.email,
-     user: req.query.user,
-     password: req.query.password
-  });
-  users.save(function(error, document){
-    if(error){
-      res.send('Error !');
-    }else{
-      res.send(document);
-    }
-    });
-
-  }else{
-    //Update
-  User.findById(req.query._id, function(error, document){
-      if(error){
-        res.send('Error.');
-      }else{
-        var users = document;
-        users.name = req.query.name,
-        users.lastname = req.query.lastname,
-        users.email = req.query.email,
-        users.user = req.query.user,
-        users.password = req.query.password
-        users.save(function(error, document){
-        if(error){
-            res.send('Error !');
-        }else{ 
-            res.send(document);
-        }
-      });
-    }
-  });
-}
+	
+	if(req.query._id == null){
+		
+		//insert
+		var user = new userSchema({
+	    name: req.query.name,
+	    lastname: req.query.lastname,
+	    email: req.query.email,
+	    user: req.query.user,
+	    password: req.query.password
+	  });
+	  
+	  user.save(function(error, document){
+		  if(error){
+			  res.send('Error !');
+		  }else{
+			  res.send(document);
+		  }
+	  });
+	
+	  }else{
+		  //Update user schema
+		  userSchema.findById(req.query._id, function(error, document){
+	      if(error){
+	    	  res.send('Error.');
+	      }else{
+	    	  var user = document;
+	    	  user.name = req.query.name,
+	    	  user.lastname = req.query.lastname,
+	    	  user.email = req.query.email,
+	    	  user.user = req.query.user,
+	    	  user.password = req.query.password
+	    	  user.save(function(error, document){
+	        
+	        	if(error){
+	            res.send('Error !');
+	        }else{ 
+	            res.send(document);
+	        }
+	      });
+	    }
+	  });
+	}
 });
-
-
 
 
 app.use('/', routes);
@@ -152,7 +159,6 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 
 

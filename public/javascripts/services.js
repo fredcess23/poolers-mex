@@ -1,11 +1,12 @@
 (function () {
 
   angular.module('poolersmx.services', [])
-
+      //Dependy Injection - http and q services are injected in the function
+      //factory returns an object
     .factory('poolersmxService', ['$http', '$q', function ($http, $q) {
 
       function serviceSaveUser(userdata) {
-
+        // q is used to comply the promisse or refuse it  
         var deferred = $q.defer();
 
         $http({
@@ -19,8 +20,9 @@
                 password: userdata.password,
                 _id:userdata._id
              }
-          }).
+          }). //http promisse
           success(function(data) {
+              //prommise is solve
               deferred.resolve(data);
           }).
           error(function() {
