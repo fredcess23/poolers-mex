@@ -20,7 +20,7 @@
       return {
         restrict: 'E',
         templateUrl: 'partials/poolersmx-login.html',
-        controller: function($scope,$http){
+        controller: function($scope,$http,$window){
           
           $scope.userid = '';
           $scope.psw = '';
@@ -39,8 +39,9 @@
             success(function(data) {
                if(typeof(data) == 'object'){
 
-                 alert('Success');
-
+                 //alert('Success');
+                 //$location.path("/profile"); --> it leaves the hash in the path 
+                 $window.location.href = '/profile';
                }else{
                   alert('Usuario o password incorrecto');
                } 

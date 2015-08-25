@@ -2,16 +2,18 @@ var express = require('express');
 var path = require('path');
 //var favicon = require('serve-favicon');
 var logger = require('morgan');
-//var cookieParser = require('cookie-parser');
-//var bodyParser = require('body-parser');
-
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+//new
+var session = require('express-session');
+var RedisStore = require('cookie-parser')(session);
+//old
+//var RedisStore = require('connect-redis')(express);
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var register = require('./routes/register');
 var profile = require('./routes/profile');
 var carpool = require('./routes/carpool');
-
-
 var app = express();
 
 // view engine setup
@@ -21,12 +23,29 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
-//app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({ extended: false }));
-//app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 //app.use(express.static(path.join(__dirname, 'public/views')));
 
+
+/*start session block*/
+var sess;
+app.use(session({ resave: true,
+    saveUninitialized: true,
+    secret: 'uwotm8' }));
+//app.use(session({
+//	  store: new RedisStore({
+//	    host: 'localhost',
+//	    port: 6379,
+//	    db: 2,
+//	    pass: 'RedisPASS'
+//	  }),
+//	  secret: '1234567890QWERTY'
+//	}));
+
+/*end session block*/
 
 //Conection to Mongoose
 var mongoose = require('mongoose');
@@ -57,13 +76,15 @@ var userSchema = mongoose.model('user', UserSchema);
  */
 app.post('/login', function(req, res){
 	
-	userSchema.findOne({'user':req.query.userid, 'password':req.query.psw }, 'email user', function (err, document) {
+	userSchema.findOne({'user':req.query.userid, 'password':req.query.psw }, 'user password', function (err, document) {
 	    if (err) 
 	        //return handleError(err);
 	        res.send('Error.');
 	    else{
+	          sess=req.session;
+	          sess.user = req.query.userid;
 	          //console.log('%s %s', doc.users.email, doc.users.user) 
-	          res.send(document);
+	          res.send(document); //msg to angular
 	    }
 	})
 });
