@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 //new
 var session = require('express-session');
 var RedisStore = require('cookie-parser')(session);
+var MongoStore = require('connect-mongo')(session);
+
 //old
 //var RedisStore = require('connect-redis')(express);
 var routes = require('./routes/index');
@@ -30,23 +32,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(express.static(path.join(__dirname, 'public/views')));
 
 
-/*start session block*/
-var sess;
-app.use(session({ resave: true,
-    saveUninitialized: true,
-    secret: 'uwotm8' }));
-//app.use(session({
-//	  store: new RedisStore({
-//	    host: 'localhost',
-//	    port: 6379,
-//	    db: 2,
-//	    pass: 'RedisPASS'
-//	  }),
-//	  secret: '1234567890QWERTY'
-//	}));
-
-/*end session block*/
-
 //Conection to Mongoose
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/poolersmx', function(error){
@@ -56,6 +41,28 @@ mongoose.connect('mongodb://localhost:27017/poolersmx', function(error){
     console.log('Conected to MongoDB');
  }
 });
+
+
+/*start session block*/
+var sess;
+
+//app.use(session({ resave: true,
+//    saveUninitialized: true,
+//    secret: 'uwotm8' }));
+
+//Re-use a Mongoose connection
+
+app.use(session({resave: true,
+  saveUninitialized: true,
+  secret: 'uwotm8',
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
+}));
+
+
+/*end session block*/
+
+
+
 
 //Documents
 var UserSchema = mongoose.Schema({
@@ -88,6 +95,21 @@ app.post('/login', function(req, res){
 	    }
 	})
 });
+
+app.get('/logout', function(req, res){
+	
+	req.session.destroy(function(err){
+		if(err){
+			console.log(err);
+		}
+		else{
+			console.log("Closing session");
+			res.redirect('/');
+		}
+	});
+
+});
+
 
 
 /**

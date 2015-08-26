@@ -10,11 +10,11 @@ router.get('/', function(req, res, next) {
   sess=req.session;
   if(sess.user){
   	res.sendFile(path.join(__dirname, '../public/views', 'profile.html'));
-	  console.log('redirige a profile!!!');
+	  console.log('Go to profile!!!');
   }
   else
 	  res.redirect('/');
-  	  console.log('redirige a home!!!');
+  	  console.log('Go to home!!!');
 
 });
 
